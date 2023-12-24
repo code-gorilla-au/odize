@@ -18,7 +18,7 @@ func TestUnitNoEnvVarShouldRunAll(t *testing.T) {
 		Run()
 
 	AssertNoError(t, err)
-	AssertFalse(t, unit.skipped)
+	AssertEqual(t, false, unit.skipped)
 }
 
 func TestUnitEnvVarShouldRunAll(t *testing.T) {
@@ -38,7 +38,7 @@ func TestUnitEnvVarShouldRunAll(t *testing.T) {
 		Run()
 
 	AssertNoError(t, err)
-	AssertFalse(t, unit.skipped)
+	AssertEqual(t, false, unit.skipped)
 
 }
 
@@ -82,7 +82,7 @@ func TestBeforeAll(t *testing.T) {
 		Run()
 
 	AssertNoError(t, err)
-	AssertFalse(t, unit.skipped)
+	AssertEqual(t, false, unit.skipped)
 }
 
 func TestAfterAll(t *testing.T) {
@@ -135,7 +135,7 @@ func TestBeforeEach(t *testing.T) {
 		Run()
 
 	AssertNoError(t, err)
-	AssertFalse(t, unit.skipped)
+	AssertEqual(t, false, unit.skipped)
 }
 
 func TestAfterEach(t *testing.T) {
@@ -164,7 +164,7 @@ func TestAfterEach(t *testing.T) {
 		Run()
 
 	AssertNoError(t, err)
-	AssertFalse(t, unit.skipped)
+	AssertEqual(t, false, unit.skipped)
 }
 
 func TestTestFuncWithNamedFuncs(t *testing.T) {
@@ -181,7 +181,7 @@ func TestTestFuncWithNamedFuncs(t *testing.T) {
 
 	err := unit.Run()
 	AssertNoError(t, err)
-	AssertFalse(t, unit.skipped)
+	AssertEqual(t, false, unit.skipped)
 }
 
 func TestTestFuncWithAnonymousFuncs(t *testing.T) {
@@ -202,7 +202,7 @@ func TestTestFuncWithAnonymousFuncs(t *testing.T) {
 		Run()
 
 	AssertNoError(t, err)
-	AssertFalse(t, unit.skipped)
+	AssertEqual(t, false, unit.skipped)
 }
 
 func testShouldEqualOne(t *testing.T) {
