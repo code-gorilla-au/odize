@@ -45,7 +45,10 @@ func NewGroup(t *testing.T, tags *[]string) *TestGroup {
 
 // Test - Add a test to the group
 func (tg *TestGroup) Test(name string, testFn TestFn) *TestGroup {
-	tg.registerTest(name, testFn)
+	if err := tg.registerTest(name, testFn); err != nil {
+		tg.errors.Append(err)
+	}
+
 	return tg
 }
 
