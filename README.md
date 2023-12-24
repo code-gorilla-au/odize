@@ -27,7 +27,9 @@ If what you're working on needs to be able to filter tests by tag, have more gra
 - Assertions built in
     - AssertEqual
     - AssertTrue
+	- AssertFalse
     - AssertNoError
+	- AssertError
     - AssertNil
 
 ## Basic usage

@@ -217,7 +217,7 @@ func testShouldFail(t *testing.T) {
 	AssertEqual(t, 1, 2)
 }
 
-func Test_shouldSkipTests(t *testing.T) {
+func TestShouldSkipTests(t *testing.T) {
 	group := NewGroup(t, nil)
 
 	err := group.
@@ -240,4 +240,34 @@ func Test_shouldSkipTests(t *testing.T) {
 		Run()
 
 	AssertNoError(t, err)
+}
+
+func TestRegisterCleanupTaskShouldNotFailIfSkipped(t *testing.T) {
+	tg := TestGroup{
+		t:     t,
+		cache: map[string]struct{}{},
+	}
+
+	err := tg.registerTest("test", func(t *testing.T) {
+		t.Skip()
+	})
+	AssertNoError(t, err)
+
+	err = tg.Run()
+	AssertNoError(t, err)
+
+	tg.registerCleanupTasks()
+}
+
+func TestRegisterCleanupTaskShouldNotFailIfComplete(t *testing.T) {
+	tg := TestGroup{
+		t:        t,
+		cache:    map[string]struct{}{},
+		complete: true,
+	}
+
+	err := tg.registerTest("test", func(t *testing.T) {})
+	AssertNoError(t, err)
+
+	tg.registerCleanupTasks()
 }

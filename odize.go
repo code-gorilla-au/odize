@@ -118,6 +118,7 @@ func (tg *TestGroup) registerCleanupTasks() {
 	tg.t.Helper()
 
 	tg.t.Cleanup(func() {
+		tg.t.Helper()
 		if tg.t.Skipped() {
 			return
 		}
