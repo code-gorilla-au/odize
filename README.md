@@ -11,8 +11,6 @@ The golang testing standard lib is more than capable for most cases, it's prefer
 If what you're working on needs to be able to filter tests by tag, have more granular setup / teardown code, please consider odize 
 
 
-[toc]
-
 ## Features
 
 - Lightweight wrapper on the go standard library
