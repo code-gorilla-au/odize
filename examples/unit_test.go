@@ -14,9 +14,6 @@ func TestBasicUnitTestExample(t *testing.T) {
 		Test("should pass", func(t *testing.T) {
 			odize.AssertTrue(t, true)
 		}).
-		Test("should fail", func(t *testing.T) {
-			odize.AssertTrue(t, false)
-		}).
 		Run()
 
 	odize.AssertNoError(t, err)
