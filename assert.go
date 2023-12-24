@@ -34,6 +34,19 @@ func AssertTrue(t *testing.T, value bool) {
 	}
 }
 
+// AssertFalse checks if value is true
+//
+// Example:
+//
+//	AssertFalse(t, methodReturnsFalse())
+func AssertFalse(t *testing.T, value bool) {
+	t.Helper()
+
+	if value {
+		log(t, decorateDiff(false, value))
+	}
+}
+
 // AssertNoError checks if error is nil
 //
 // Example:

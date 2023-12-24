@@ -6,10 +6,10 @@ import (
 
 func TestUnitNoEnvVarShouldRunAll(t *testing.T) {
 	unit := &TestGroup{
-		t:        t,
-		tags:     []string{},
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: []string{},
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
 	err := unit.
@@ -26,10 +26,10 @@ func TestUnitEnvVarShouldRunAll(t *testing.T) {
 	t.Setenv(ODIZE_TAGS, "unit")
 
 	unit := &TestGroup{
-		t:        t,
-		tags:     []string{},
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: []string{},
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
 	err := unit.
@@ -46,10 +46,10 @@ func TestUnitEnvVarNonMatchShouldSkipAndPass(t *testing.T) {
 	t.Setenv(ODIZE_TAGS, "unit")
 
 	unit := &TestGroup{
-		t:        t,
-		tags:     []string{"integration"},
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: []string{"integration"},
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
 	err := unit.
@@ -61,10 +61,10 @@ func TestUnitEnvVarNonMatchShouldSkipAndPass(t *testing.T) {
 
 func TestBeforeAll(t *testing.T) {
 	unit := &TestGroup{
-		t:        t,
-		tags:     []string{},
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: []string{},
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
 	increment := 0
@@ -87,10 +87,10 @@ func TestBeforeAll(t *testing.T) {
 
 func TestAfterAll(t *testing.T) {
 	unit := &TestGroup{
-		t:        t,
-		tags:     []string{},
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: []string{},
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
 	increment := 0
@@ -111,10 +111,10 @@ func TestAfterAll(t *testing.T) {
 
 func TestBeforeEach(t *testing.T) {
 	unit := &TestGroup{
-		t:        t,
-		tags:     []string{},
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: []string{},
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
 	increment := 0
@@ -140,10 +140,10 @@ func TestBeforeEach(t *testing.T) {
 
 func TestAfterEach(t *testing.T) {
 	unit := &TestGroup{
-		t:        t,
-		tags:     []string{},
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: []string{},
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
 	increment := 0
@@ -169,10 +169,10 @@ func TestAfterEach(t *testing.T) {
 
 func TestTestFuncWithNamedFuncs(t *testing.T) {
 	unit := &TestGroup{
-		t:        t,
-		tags:     []string{},
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: []string{},
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
 	unit.
@@ -186,10 +186,10 @@ func TestTestFuncWithNamedFuncs(t *testing.T) {
 
 func TestTestFuncWithAnonymousFuncs(t *testing.T) {
 	unit := &TestGroup{
-		t:        t,
-		tags:     []string{},
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: []string{},
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
 	err := unit.
@@ -215,4 +215,29 @@ func testShouldEqualThree(t *testing.T) {
 
 func testShouldFail(t *testing.T) {
 	AssertEqual(t, 1, 2)
+}
+
+func Test_shouldSkipTests(t *testing.T) {
+	group := NewGroup(t, nil)
+
+	err := group.
+		Test("should not skip if no env vars", func(t *testing.T) {
+			result := shouldSkipTests([]string{"unit"}, []string{})
+			AssertTrue(t, result)
+		}).
+		Test("should skip if no env var does not match", func(t *testing.T) {
+			result := shouldSkipTests([]string{"unit"}, []string{"system"})
+			AssertTrue(t, result)
+		}).
+		Test("should not skip if env var does match", func(t *testing.T) {
+			result := shouldSkipTests([]string{"unit"}, []string{"unit"})
+			AssertFalse(t, result)
+		}).
+		Test("should not skip if env var present and group has no tags", func(t *testing.T) {
+			result := shouldSkipTests([]string{}, []string{"unit"})
+			AssertTrue(t, result)
+		}).
+		Run()
+
+	AssertNoError(t, err)
 }

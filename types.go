@@ -11,7 +11,8 @@ type TestGroup struct {
 	beforeEach func()
 	afterEach  func()
 	afterAll   func()
-	tags       []string
+	groupTags  []string
+	envTags    []string
 	skipped    bool
 	complete   bool
 	registry   []TestRegistryEntry

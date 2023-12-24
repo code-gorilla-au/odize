@@ -23,22 +23,17 @@ func NewGroup(t *testing.T, tags *[]string) *TestGroup {
 		groupTags = &[]string{}
 	}
 
+	envTags := env.GetAsSlice(ODIZE_TAGS, ",")
+
 	tg := &TestGroup{
-		t:        t,
-		tags:     *groupTags,
-		registry: []TestRegistryEntry{},
-		cache:    map[string]struct{}{},
+		t:         t,
+		groupTags: *groupTags,
+		envTags:   envTags,
+		registry:  []TestRegistryEntry{},
+		cache:     map[string]struct{}{},
 	}
 
-	t.Cleanup(func() {
-		if t.Skipped() {
-			return
-		}
-
-		if !tg.complete && len(tg.registry) > 0 {
-			tg.t.Fatalf(fmt.Sprintf("test group \"%s\" did not run. Make sure you use the .Run() method to execute test group", t.Name()))
-		}
-	})
+	tg.registerCleanupTasks()
 
 	return tg
 }
@@ -81,7 +76,7 @@ func (tg *TestGroup) Run() error {
 		return &tg.errors
 	}
 
-	if shouldSkipTests(tg.tags) {
+	if shouldSkipTests(tg.groupTags, tg.envTags) {
 		tg.skipped = true
 		tg.t.Skip("Skipping test group ", tg.t.Name())
 		return nil
@@ -118,6 +113,21 @@ func (tg *TestGroup) registerTest(name string, testFn TestFn) error {
 	return nil
 }
 
+// registerCleanupTasks registers cleanup tasks to ensure that the test group is run
+func (tg *TestGroup) registerCleanupTasks() {
+	tg.t.Helper()
+
+	tg.t.Cleanup(func() {
+		if tg.t.Skipped() {
+			return
+		}
+
+		if !tg.complete && len(tg.registry) > 0 {
+			tg.t.Fatalf(fmt.Sprintf("test group \"%s\" did not run. Make sure you use the .Run() method to execute test group", tg.t.Name()))
+		}
+	})
+}
+
 // sanitiseLifecycle ensures that the lifecycle functions are not nil by adding no op funcs
 func (tg *TestGroup) sanitiseLifecycle() {
 	if tg.beforeAll == nil {
@@ -139,16 +149,15 @@ func (tg *TestGroup) sanitiseLifecycle() {
 }
 
 // shouldSkipTests checks if the test group should be skipped based on environment tags
-func shouldSkipTests(groupTags []string) bool {
-	tags := env.GetAsSlice(ODIZE_TAGS, ",")
+func shouldSkipTests(groupTags []string, envTags []string) bool {
 
-	if len(groupTags) == 0 || len(tags) == 0 {
+	if len(groupTags) == 0 && len(envTags) == 0 {
 		// run all tests
 		return false
 	}
 
 	for _, groupTag := range groupTags {
-		if slices.Contains(tags, groupTag) {
+		if slices.Contains(envTags, groupTag) {
 			return false
 		}
 	}

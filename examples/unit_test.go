@@ -150,3 +150,13 @@ func TestBasicUnitTestExampleWithResetState(t *testing.T) {
 
 	odize.AssertNoError(t, err)
 }
+
+func TestSkipGroup(t *testing.T) {
+	e2e := odize.NewGroup(t, &[]string{"e2e"})
+	err := e2e.Test("should not run", func(t *testing.T) {
+		t.Error("should not run")
+	}).
+		Run()
+
+	odize.AssertNoError(t, err)
+}
