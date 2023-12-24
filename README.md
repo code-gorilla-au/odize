@@ -32,6 +32,12 @@ If what you're working on needs to be able to filter tests by tag, have more gra
 
 ## Basic usage
 
+### Install
+
+```bash
+go get github.com/code-gorilla-au/odize@latest
+```
+
 ### Create your group
 
 Create a test group 
