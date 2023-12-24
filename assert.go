@@ -47,6 +47,19 @@ func AssertNoError(t *testing.T, err error) {
 	}
 }
 
+// AssertError checks if error is nil
+//
+// Example:
+//
+//	AssertError(t, err)
+func AssertError(t *testing.T, err error) {
+	t.Helper()
+
+	if err == nil {
+		log(t, decorateDiff(err, "<nil>"))
+	}
+}
+
 // AssertEqual checks if two values are equal
 //
 // Example:
