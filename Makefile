@@ -21,7 +21,7 @@ GO_BUILD_FLAGS=-ldflags=""
 BUILD_PATH ?= "cmd"
 BINARY_PATH ?= "dist"
 
-test: scan ## Run unit tests
+test: log scan ## Run unit tests
 	go test --short -cover -failfast ./...
 
 scan: ## run security scan
