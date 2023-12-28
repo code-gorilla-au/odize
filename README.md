@@ -4,11 +4,11 @@ Testing, [supercharged](https://www.yourdictionary.com/odize)! odize is a lightw
 
 ## Motivation
 
-Bringing the JS ecosystem to golang! Jokes aside, I wanted to remove boilerplate code from the tests. 
+Bringing the JS ecosystem to golang! Jokes aside, I wanted to remove boilerplate code from the tests while still using the core testing library. Heavy inspiration from [vitest](https://vitest.dev/) and [jest](https://jestjs.io/), odize aims to be a light weight, easy to use test framework on top of the standard library.
 
 The golang testing standard lib is more than capable for most cases, it's preferable to default to the standard lib where possible.
 
-If what you're working on needs to be able to filter tests by tag, have more granular setup / teardown code, please consider odize 
+If what you're working on needs to be able to filter tests by tag, have more granular setup / teardown code, please consider odize.
 
 
 ## Features
@@ -94,15 +94,75 @@ go test --short -cover -v -failfast ./...
 Terminal output
 
 ```bash
---- PASS: TestScenarioOne (0.00s)
-    --- PASS: TestScenarioOne/user_age_should_equal_2 (0.00s)
-    --- PASS: TestScenarioOne/user_age_should_equal_3 (0.00s)
-    --- PASS: TestScenarioOne/user_age_should_equal_4 (0.00s)
-    --- PASS: TestScenarioOne/user_age_should_equal_5 (0.00s)
-    --- PASS: TestScenarioOne/user_age_should_equal_6 (0.00s)
-PASS
-ok      github.com/code-gorilla-au/odize     0.118s
+go test -v --short -cover -failfast ./...
+=== RUN   TestDecorateBlock
+=== RUN   TestDecorateBlock/should_contain_label
+=== RUN   TestDecorateBlock/should_contain_content
+=== RUN   TestDecorateBlock/should_contain_line_decorator
+--- PASS: TestDecorateBlock (0.00s)
+    --- PASS: TestDecorateBlock/should_contain_label (0.00s)
+    --- PASS: TestDecorateBlock/should_contain_content (0.00s)
+    --- PASS: TestDecorateBlock/should_contain
 
+```
+
+## Test options
+
+Optionally, you are able to provide some test options to a test within a group. This provides fine grain control over the test group, especially when you need to isolate a singular test within a group to debug.
+
+| Option | Description |
+| ------ | ----------- |
+| Skip	 |	Skip specified test |
+| Only   | Within the test group, only run the specified test |
+
+
+### Providing options to a test
+
+Skip example 
+
+```golang
+func TestSkipExample(t *testing.T) {
+	group := odize.NewGroup(t, nil)
+
+	err := group.
+		Test("should equal 2", func(t *testing.T) {
+			result := add(1,1)
+			AssertEqual(t, 2, result)
+		}).
+		Test("should equal 4", func(t *testing.T) {
+			result := add(2,2)
+			AssertEqual(t, 4, result)
+		}).
+		Test("should equal 3", func(t *testing.T) {
+			// Note this test will be skipped
+			result := add(1,2)
+			AssertEqual(t, 3, result)
+		}, Skip()).
+		Run(t)
+
+	AssertNoError(t, err)
+}
+```
+
+
+```golang
+func TestOnlyExample(t *testing.T) {
+	group := odize.NewGroup(t, nil)
+
+	err := group.
+		Test("should equal 2", func(t *testing.T) {
+			result := add(1,1)
+			AssertEqual(t, 2, result)
+		}).
+		Test("should equal 3", func(t *testing.T) {
+			// Note, only this test will be run within this group
+			result := add(1,2)
+			AssertEqual(t, 3, result)
+		}, Only()).
+		Run(t)
+
+	AssertNoError(t, err)
+}
 ```
 
 ## Filtering tets
@@ -120,6 +180,7 @@ func TestScenarioTwo(t *testing.T) {
 	group := odize.NewGroup(t, &[]string{"integration"})
 
 /** omit rest of the code **/
+}
 
 ```
 
@@ -132,12 +193,13 @@ ODIZE_TAGS="unit" go test --short -v -cover  -failfast ./...
 ```
 
 ```bash
---- PASS: TestScenarioOne/should_equal_1 (0.00s)
-=== RUN   TestScenarioTwo
-    odize.go:55: Skipping test group  TestScenarioTwo
---- SKIP: TestScenarioTwo (0.00s)
+=== RUN   TestSkipGroup
+    unit_test.go:159: Skipping test group  TestSkipGroup
+--- SKIP: TestSkipGroup (0.00s)
 ```
 
 
 
+## Examples
 
+See [examples provided](./examples/examples_test.go) for more details.

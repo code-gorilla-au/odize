@@ -76,6 +76,8 @@ func (tg *TestGroup) AfterAll(fn func()) {
 //
 // If errors are encountered, tests will not run.
 func (tg *TestGroup) Run() error {
+	tg.t.Helper()
+
 	if tg.errors.Len() > 0 {
 		tg.complete = true
 		return &tg.errors
@@ -179,6 +181,7 @@ func filterExecutableTests(t *testing.T, tests []TestRegistryEntry) []TestRegist
 	filtered := filterOnlyAllowedTests(t, tests)
 
 	if len(filtered) > 0 {
+		// if there are tests that are marked as only, then return 'only' those tests
 		return filtered
 	}
 

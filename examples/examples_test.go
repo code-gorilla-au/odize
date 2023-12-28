@@ -160,3 +160,37 @@ func TestSkipGroup(t *testing.T) {
 
 	odize.AssertNoError(t, err)
 }
+
+func TestSkipTestWithinGroup(t *testing.T) {
+	group := odize.NewGroup(t, nil)
+	err := group.
+		Test("should equal 1", func(t *testing.T) {
+			odize.AssertEqual(t, 1, 1)
+		}).
+		Test("should equal 2", func(t *testing.T) {
+			odize.AssertEqual(t, 2, 2)
+		}).
+		Test("should skip this test", func(t *testing.T) {
+			odize.AssertEqual(t, 3, 3)
+		}, odize.Skip()).
+		Run()
+
+	odize.AssertNoError(t, err)
+}
+
+func TestRunOnlyOneWithinGroup(t *testing.T) {
+	group := odize.NewGroup(t, nil)
+	err := group.
+		Test("should equal 1", func(t *testing.T) {
+			odize.AssertEqual(t, 1, 1)
+		}).
+		Test("should equal 2", func(t *testing.T) {
+			odize.AssertEqual(t, 2, 2)
+		}).
+		Test("should only run this test", func(t *testing.T) {
+			odize.AssertEqual(t, 3, 3)
+		}, odize.Only()).
+		Run()
+
+	odize.AssertNoError(t, err)
+}
