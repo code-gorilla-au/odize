@@ -91,6 +91,8 @@ func (tg *TestGroup) Run() error {
 
 	tg.beforeAll()
 
+	entries := filterExecutableTests(tg.t, tg.registry)
+
 	for _, entry := range tg.registry {
 		tg.beforeEach()
 		tg.t.Run(entry.name, entry.fn)
@@ -170,4 +172,41 @@ func shouldSkipTests(groupTags []string, envTags []string) bool {
 	}
 
 	return true
+}
+
+// filterExecutableTests filters tests that are executable within the test group
+func filterExecutableTests(t *testing.T, tests []TestRegistryEntry) []TestRegistryEntry {
+	filtered := filterOnlyAllowedTests(t, tests)
+
+	if len(filtered) > 0 {
+		return filtered
+	}
+
+	for _, test := range tests {
+		if test.options.Skip {
+			filtered = append(filtered, TestRegistryEntry{
+				name: test.name,
+				fn: func(t *testing.T) {
+					t.Skip("skipping test ", test.name)
+				},
+			})
+		}
+
+		filtered = append(filtered, test)
+	}
+
+	return filtered
+}
+
+// filterOnlyAllowedTests filters tests that are marked as only within a test group
+func filterOnlyAllowedTests(t *testing.T, tests []TestRegistryEntry) []TestRegistryEntry {
+	filtered := []TestRegistryEntry{}
+
+	for _, test := range tests {
+		if test.options.Only {
+			filtered = append(filtered, test)
+		}
+	}
+
+	return filtered
 }
