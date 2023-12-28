@@ -93,7 +93,7 @@ func (tg *TestGroup) Run() error {
 
 	entries := filterExecutableTests(tg.t, tg.registry)
 
-	for _, entry := range tg.registry {
+	for _, entry := range entries {
 		tg.beforeEach()
 		tg.t.Run(entry.name, entry.fn)
 		tg.afterEach()
@@ -190,6 +190,8 @@ func filterExecutableTests(t *testing.T, tests []TestRegistryEntry) []TestRegist
 					t.Skip("skipping test ", test.name)
 				},
 			})
+
+			continue
 		}
 
 		filtered = append(filtered, test)

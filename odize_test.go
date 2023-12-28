@@ -271,3 +271,34 @@ func TestRegisterCleanupTaskShouldNotFailIfComplete(t *testing.T) {
 
 	tg.registerCleanupTasks()
 }
+
+func TestOptionSkip(t *testing.T) {
+	tg := NewGroup(t, nil)
+
+	testExecute := false
+
+	err := tg.
+		Test("should not execute test", func(t *testing.T) {
+			testExecute = true
+		}, Skip()).
+		Run()
+	AssertNoError(t, err)
+	AssertFalse(t, testExecute)
+}
+
+func TestOptionOnly(t *testing.T) {
+	tg := NewGroup(t, nil)
+
+	testCall := 0
+
+	err := tg.
+		Test("should execute test ", func(t *testing.T) {
+			testCall++
+		}, Only()).
+		Test("should not execute test", func(t *testing.T) {
+			testCall++
+		}).
+		Run()
+	AssertNoError(t, err)
+	AssertEqual(t, 1, testCall)
+}
