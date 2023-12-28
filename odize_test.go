@@ -250,7 +250,7 @@ func TestRegisterCleanupTaskShouldNotFailIfSkipped(t *testing.T) {
 
 	err := tg.registerTest("test", func(t *testing.T) {
 		t.Skip()
-	})
+	}, TestOpts{})
 	AssertNoError(t, err)
 
 	err = tg.Run()
@@ -266,7 +266,7 @@ func TestRegisterCleanupTaskShouldNotFailIfComplete(t *testing.T) {
 		complete: true,
 	}
 
-	err := tg.registerTest("test", func(t *testing.T) {})
+	err := tg.registerTest("test", func(t *testing.T) {}, TestOpts{})
 	AssertNoError(t, err)
 
 	tg.registerCleanupTasks()

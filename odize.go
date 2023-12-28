@@ -39,8 +39,13 @@ func NewGroup(t *testing.T, tags *[]string) *TestGroup {
 }
 
 // Test - Add a test to the group
-func (tg *TestGroup) Test(name string, testFn TestFn) *TestGroup {
-	if err := tg.registerTest(name, testFn); err != nil {
+func (tg *TestGroup) Test(name string, testFn TestFn, options ...TestFuncOpts) *TestGroup {
+	testOpts := TestOpts{}
+	for _, opt := range options {
+		opt(&testOpts)
+	}
+
+	if err := tg.registerTest(name, testFn, testOpts); err != nil {
 		tg.errors.Append(err)
 	}
 
@@ -100,15 +105,16 @@ func (tg *TestGroup) Run() error {
 }
 
 // registerTest registers a test to the group. Do not overwrite existing tests.
-func (tg *TestGroup) registerTest(name string, testFn TestFn) error {
+func (tg *TestGroup) registerTest(name string, testFn TestFn, options TestOpts) error {
 	if _, ok := tg.cache[name]; ok {
 		return fmt.Errorf(fmt.Sprintf("test already exists: %s", name))
 	}
 
 	tg.cache[name] = struct{}{}
 	tg.registry = append(tg.registry, TestRegistryEntry{
-		name: name,
-		fn:   testFn,
+		name:    name,
+		fn:      testFn,
+		options: options,
 	})
 	return nil
 }

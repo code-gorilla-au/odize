@@ -28,7 +28,16 @@ type TestRegistryEntry struct {
 	// Name of the test
 	name string
 	// Test function to execute with context
-	fn TestFn
+	fn      TestFn
+	options TestOpts
+}
+
+type TestFuncOpts = func(*TestOpts)
+
+// TestOpts - Test options for granular control over each test
+type TestOpts struct {
+	Only bool
+	Skip bool
 }
 
 // ErrorList - keep track of a number of errors
