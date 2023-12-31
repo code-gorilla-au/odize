@@ -2,6 +2,9 @@
 
 Testing, [supercharged](https://www.yourdictionary.com/odize)! odize is a lightweight wrapper over the standard testing lib that enables some additional features.
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/code-gorilla-au/odize)](https://goreportcard.com/report/github.com/code-gorilla-au/odize)
+[![Go Reference](https://pkg.go.dev/badge/github.com/code-gorilla-au/odize.svg)](https://pkg.go.dev/github.com/code-gorilla-au/odize)
+
 ## Motivation
 
 Bringing the JS ecosystem to golang! Jokes aside, I wanted to remove boilerplate code from the tests while still using the core testing library. Heavy inspiration from [vitest](https://vitest.dev/) and [jest](https://jestjs.io/), odize aims to be a light weight, easy to use test framework on top of the standard library.
@@ -13,24 +16,12 @@ If what you're working on needs to be able to filter tests by tag, have more gra
 
 ## Features
 
-- Lightweight wrapper on the go standard library
-    - Remove boilerplate code
-    - Same reports / output
-    - Same flags
-- Lifecycle hooks
-    - BeforeAll - run before all tests
-    - BeforeEach - run before each test
-    - AfterAll - run after all test
-    - AfterEach - run after each test
-- Test grouping
-    - Group tests by tag to enable test filtering
-- Assertions built in
-    - AssertEqual
-    - AssertTrue
-	- AssertFalse
-    - AssertNoError
-	- AssertError
-    - AssertNil
+| Feature | Description |
+| ------- | ----------- |
+| Powered by std lib |  Lightweight wrapper over the standard testing library, easy plug and play, no need to update your test commands. | 
+| Lifecycle hooks | Have granular control in the setup / teardown tests with helper functions: `BeforeAll`, `BeforeEach`, `AfterEach`, `AfterAll` |
+| Test filtering | Run a subset of tests based off either `group tags`, or via `test options`. |
+| Assertions | Built in core assertions `AssertEqual`, `AssertTrue`, `AssertFalse`, `AssertNoError`, `AssertError`, `AssertNil` | 
 
 ## Basic usage
 
@@ -76,7 +67,7 @@ func TestScenarioOne(t *testing.T) {
 		Test("user age should equal 6", func(t *testing.T) {
 			AssertEqual(t, 6, user.Age)
 		}).
-		Run(t)
+		Run()
 
 	AssertNoError(t, err)
 
@@ -105,6 +96,17 @@ go test -v --short -cover -failfast ./...
     --- PASS: TestDecorateBlock/should_contain
 
 ```
+
+## Lifecycle hooks 
+
+Odize has helper functions that help provide granular setup / teardown helpers for each test within the group.
+
+| Hook | Description |
+| ---- | ----------- |
+| BeforeAll | Invoke before all tests within a group |
+| BeforeEach | Invoke before each test within a group |
+| AfterEach | Invoke after each test within a group |
+| AfterAll | Invoke after all tests within a group | 
 
 ## Test options
 
@@ -165,7 +167,7 @@ func TestOnlyExample(t *testing.T) {
 }
 ```
 
-## Filtering tets
+## Filtering tests
 
 Provide the specific environment variable with values `ODIZE_TAGS="unit"`. 
 
