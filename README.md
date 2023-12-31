@@ -2,6 +2,9 @@
 
 Testing, [supercharged](https://www.yourdictionary.com/odize)! odize is a lightweight wrapper over the standard testing lib that enables some additional features.
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/code-gorilla-au/odize)](https://goreportcard.com/report/github.com/code-gorilla-au/odize)
+[![Go Reference](https://pkg.go.dev/badge/github.com/code-gorilla-au/odize.svg)](https://pkg.go.dev/github.com/code-gorilla-au/odize)
+
 ## Motivation
 
 Bringing the JS ecosystem to golang! Jokes aside, I wanted to remove boilerplate code from the tests while still using the core testing library. Heavy inspiration from [vitest](https://vitest.dev/) and [jest](https://jestjs.io/), odize aims to be a light weight, easy to use test framework on top of the standard library.
