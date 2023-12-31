@@ -16,24 +16,12 @@ If what you're working on needs to be able to filter tests by tag, have more gra
 
 ## Features
 
-- Lightweight wrapper on the go standard library
-    - Remove boilerplate code
-    - Same reports / output
-    - Same flags
-- Lifecycle hooks
-    - BeforeAll - run before all tests
-    - BeforeEach - run before each test
-    - AfterAll - run after all test
-    - AfterEach - run after each test
-- Test grouping
-    - Group tests by tag to enable test filtering
-- Assertions built in
-    - AssertEqual
-    - AssertTrue
-	- AssertFalse
-    - AssertNoError
-	- AssertError
-    - AssertNil
+| Feature | Description |
+| ------- | ----------- |
+| Powered by std lib |  Lightweight wrapper over the standard testing library, easy plug and play, no need to update your test commands. | 
+| Lifecycle hooks | Have granular control in the setup / teardown tests with helper functions: `BeforeAll`, `BeforeEach`, `AfterEach`, `AfterAll` |
+| Test filtering | Run a subset of tests based off either `group tags`, or via `test options`. |
+| Assertions | Built in core assertions `AssertEqual`, `AssertTrue`, `AssertFalse`, `AssertNoError`, `AssertError`, `AssertNil` | 
 
 ## Basic usage
 
@@ -79,7 +67,7 @@ func TestScenarioOne(t *testing.T) {
 		Test("user age should equal 6", func(t *testing.T) {
 			AssertEqual(t, 6, user.Age)
 		}).
-		Run(t)
+		Run()
 
 	AssertNoError(t, err)
 
@@ -108,6 +96,17 @@ go test -v --short -cover -failfast ./...
     --- PASS: TestDecorateBlock/should_contain
 
 ```
+
+## Lifecycle hooks 
+
+Odize has helper functions that help provide granular setup / teardown helpers for each test within the group.
+
+| Hook | Description |
+| ---- | ----------- |
+| BeforeAll | Invoke before all tests within a group |
+| BeforeEach | Invoke before each test within a group |
+| AfterEach | Invoke after each test within a group |
+| AfterAll | Invoke after all tests within a group | 
 
 ## Test options
 
@@ -168,7 +167,7 @@ func TestOnlyExample(t *testing.T) {
 }
 ```
 
-## Filtering tets
+## Filtering tests
 
 Provide the specific environment variable with values `ODIZE_TAGS="unit"`. 
 
