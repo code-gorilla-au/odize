@@ -69,7 +69,7 @@ func AssertError(t *testing.T, err error) {
 	t.Helper()
 
 	if err == nil {
-		log(t, decorateDiff(err, "<nil>"))
+		log(t, decorateDiff("<error>", err))
 	}
 }
 
