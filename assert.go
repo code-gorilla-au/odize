@@ -60,7 +60,7 @@ func AssertNoError(t *testing.T, err error) {
 	}
 }
 
-// AssertError checks if error is nil
+// AssertError checks if error is not nil
 //
 // Example:
 //
