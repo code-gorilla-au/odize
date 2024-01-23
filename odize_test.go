@@ -288,6 +288,12 @@ func TestOptionSkip(t *testing.T) {
 }
 
 func TestOptionOnly(t *testing.T) {
+	t.Setenv(ENV_CI, "false")
+
+	defer func() {
+		t.Setenv(ENV_CI, "true")
+	}()
+
 	tg := NewGroup(t, nil)
 
 	testCall := 0
@@ -302,6 +308,7 @@ func TestOptionOnly(t *testing.T) {
 		Run()
 	AssertNoError(t, err)
 	AssertEqual(t, 1, testCall)
+
 }
 
 func TestCITest(t *testing.T) {
