@@ -1,6 +1,7 @@
 package odize
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -287,6 +288,12 @@ func TestOptionSkip(t *testing.T) {
 }
 
 func TestOptionOnly(t *testing.T) {
+	t.Setenv(ENV_CI, "false")
+
+	defer func() {
+		t.Setenv(ENV_CI, "true")
+	}()
+
 	tg := NewGroup(t, nil)
 
 	testCall := 0
@@ -301,4 +308,42 @@ func TestOptionOnly(t *testing.T) {
 		Run()
 	AssertNoError(t, err)
 	AssertEqual(t, 1, testCall)
+
+}
+
+func TestCITest(t *testing.T) {
+	t.Setenv(ENV_CI, "true")
+
+	defer func() {
+		t.Setenv(ENV_CI, "false")
+	}()
+
+	tg := NewGroup(t, nil)
+
+	err := tg.
+		Test("should fail group if ENV_CI is true", func(t *testing.T) {
+			AssertTrue(t, true)
+		}, Only()).
+		Test("should not execute test", func(t *testing.T) {
+			AssertTrue(t, false)
+		}).
+		Run()
+	AssertTrue(t, errors.Is(err, ErrTestOptionNotAllowedInCI))
+}
+
+func TestCITestNoOnly(t *testing.T) {
+	t.Setenv(ENV_CI, "true")
+
+	defer func() {
+		t.Setenv(ENV_CI, "false")
+	}()
+
+	tg := NewGroup(t, nil)
+
+	err := tg.
+		Test("should pass", func(t *testing.T) {
+			AssertTrue(t, true)
+		}).
+		Run()
+	AssertNoError(t, err)
 }
