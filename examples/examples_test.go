@@ -179,6 +179,13 @@ func TestSkipTestWithinGroup(t *testing.T) {
 }
 
 func TestRunOnlyOneWithinGroup(t *testing.T) {
+
+	t.Setenv(odize.ENV_CI, "false")
+
+	defer func() {
+		t.Setenv(odize.ENV_CI, "true")
+	}()
+
 	group := odize.NewGroup(t, nil)
 	err := group.
 		Test("should equal 1", func(t *testing.T) {
