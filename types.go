@@ -18,6 +18,7 @@ type TestGroup struct {
 	registry   []TestRegistryEntry
 	cache      map[string]struct{}
 	errors     ErrorList
+	isCIEnv    bool
 }
 
 // TestFn - Test function
