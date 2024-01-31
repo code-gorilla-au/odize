@@ -16,7 +16,7 @@ import (
 func AssertNil(t *testing.T, value any) {
 	t.Helper()
 
-	if isNil(value) {
+	if !isNil(value) {
 		log(t, decorateDiff("<nil>", value))
 	}
 }
