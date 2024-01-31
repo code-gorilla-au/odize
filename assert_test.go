@@ -43,10 +43,11 @@ func TestDecorateDiff(t *testing.T) {
 func TestAssertNil(t *testing.T) {
 	group := NewGroup(t, nil)
 
-	var nilString string
-	var nilInt int
-	var nilFloat float32
-	var nilBool bool
+	var nilString *string
+	var nilInt *int
+	var nilFloat *float32
+	var nilBool *bool
+	var nilSlice []string
 
 	err := group.
 		Test("should pass nil string", func(t *testing.T) {
@@ -62,7 +63,7 @@ func TestAssertNil(t *testing.T) {
 			AssertNil(t, nilBool)
 		}).
 		Test("should pass nil empty slice", func(t *testing.T) {
-			AssertNil(t, []string{})
+			AssertNil(t, nilSlice)
 		}).
 		Run()
 
