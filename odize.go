@@ -121,7 +121,7 @@ func (tg *TestGroup) Run() error {
 // registerTest registers a test to the group. Do not overwrite existing tests.
 func (tg *TestGroup) registerTest(name string, testFn TestFn, options TestOpts) error {
 	if _, ok := tg.cache[name]; ok {
-		return fmt.Errorf(fmt.Sprintf("test already exists: %s", name))
+		return fmt.Errorf("test already exists: %s", name)
 	}
 
 	tg.cache[name] = struct{}{}
@@ -144,7 +144,7 @@ func (tg *TestGroup) registerCleanupTasks() {
 		}
 
 		if !tg.complete && len(tg.registry) > 0 {
-			tg.t.Fatalf(fmt.Sprintf("test group \"%s\" did not run. Make sure you use the .Run() method to execute test group", tg.t.Name()))
+			tg.t.Fatalf("test group \"%s\" did not run. Make sure you use the .Run() method to execute test group", tg.t.Name())
 		}
 	})
 }
@@ -174,6 +174,7 @@ func shouldSkipTests(groupTags []string, envTags []string) bool {
 
 	if len(groupTags) == 0 && len(envTags) == 0 {
 		// run all tests
+		fmt.Println("running test")
 		return false
 	}
 
@@ -182,6 +183,8 @@ func shouldSkipTests(groupTags []string, envTags []string) bool {
 			return false
 		}
 	}
+
+	fmt.Println("hitting here")
 
 	return true
 }
