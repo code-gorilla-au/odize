@@ -172,8 +172,12 @@ func (tg *TestGroup) sanitiseLifecycle() {
 // shouldSkipTests checks if the test group should be skipped based on environment tags
 func shouldSkipTests(groupTags []string, envTags []string) bool {
 
+	fmt.Println("groupTags", groupTags, "len", len(groupTags))
+	fmt.Println("envTags", envTags, "len", len(envTags))
+
 	if len(groupTags) == 0 && len(envTags) == 0 {
 		// run all tests
+		fmt.Println("running test")
 		return false
 	}
 
@@ -182,6 +186,8 @@ func shouldSkipTests(groupTags []string, envTags []string) bool {
 			return false
 		}
 	}
+
+	fmt.Println("hitting here")
 
 	return true
 }
