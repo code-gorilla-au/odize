@@ -184,8 +184,6 @@ func shouldSkipTests(groupTags []string, envTags []string) bool {
 		}
 	}
 
-	fmt.Println("hitting here")
-
 	return true
 }
 
