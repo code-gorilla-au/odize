@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// Assert value is nil
+// AssertNil Assert value is nil
 //
 // Example:
 //
@@ -82,7 +82,7 @@ func AssertEqual(t *testing.T, expected any, actual any) {
 	t.Helper()
 
 	if !isEqual(expected, actual) {
-		logf(t, decorateDiff(expected, actual))
+		log(t, decorateDiff(expected, actual))
 	}
 }
 

@@ -6,7 +6,7 @@ import (
 )
 
 func TestError(t *testing.T) {
-	list := ErrorList{}
+	list := ListError{}
 	list.Append(errors.New("expected"))
 
 	if list.Error() != "expected, " {
@@ -15,17 +15,20 @@ func TestError(t *testing.T) {
 }
 
 func TestPop(t *testing.T) {
-	list := ErrorList{}
-	list.Append(errors.New("first"))
+	firstErr := errors.New("first")
+	list := ListError{}
+	list.Append(firstErr)
 	list.Append(errors.New("second"))
 
 	expected := list.Pop()
-	if expected.Error() != "first" {
+
+	if !errors.Is(expected, firstErr) {
 		t.Errorf("expected %s, got %v ", "first", expected.Error())
 	}
 }
+
 func TestPop_no_errors(t *testing.T) {
-	list := ErrorList{}
+	list := ListError{}
 
 	expected := list.Pop()
 	if expected != nil {
