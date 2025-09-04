@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// Assert value is nil
+// AssertNil Assert value is nil
 //
 // Example:
 //
