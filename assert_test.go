@@ -1,7 +1,7 @@
 package odize
 
 import (
-	"fmt"
+	"errors"
 	"strings"
 	"testing"
 )
@@ -128,5 +128,5 @@ func TestAssertFalse(t *testing.T) {
 }
 
 func TestAssertError(t *testing.T) {
-	AssertError(t, fmt.Errorf("test"))
+	AssertError(t, errors.New("test"))
 }

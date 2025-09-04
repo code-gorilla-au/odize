@@ -17,7 +17,7 @@ type TestGroup struct {
 	complete   bool
 	registry   []TestRegistryEntry
 	cache      map[string]struct{}
-	errors     ErrorList
+	errors     ListError
 	isCIEnv    bool
 }
 
@@ -41,7 +41,7 @@ type TestOpts struct {
 	Skip bool
 }
 
-// ErrorList - keep track of a number of errors
-type ErrorList struct {
+// ListError - keep track of a number of errors
+type ListError struct {
 	errors []error
 }

@@ -1,6 +1,6 @@
 module github.com/code-gorilla-au/odize
 
-go 1.21.5
+go 1.25.0
 
 require github.com/code-gorilla-au/env v1.1.1
 

@@ -1,33 +1,37 @@
 package odize
 
-import "fmt"
+import "errors"
+
+var (
+	ErrTestAlreadyExists = errors.New("test already exists")
+)
 
 // Error - return error string
-func (e *ErrorList) Error() string {
+func (e *ListError) Error() string {
 	result := ""
 	for _, item := range e.errors {
-		result += fmt.Sprintf("%s, ", item.Error())
+		result += item.Error() + ", "
 	}
 
 	return result
 }
 
 // Unwrap - returns list of errors
-func (e *ErrorList) Unwrap() []error {
+func (e *ListError) Unwrap() []error {
 	return e.errors
 }
 
 // Append - append error to list
-func (e *ErrorList) Append(err error) {
+func (e *ListError) Append(err error) {
 	e.errors = append(e.errors, err)
 }
 
-func (e *ErrorList) Len() int {
+func (e *ListError) Len() int {
 	return len(e.errors)
 }
 
 // Pop - remove the first error from the list and return
-func (e *ErrorList) Pop() error {
+func (e *ListError) Pop() error {
 	if len(e.errors) == 0 {
 		return nil
 	}

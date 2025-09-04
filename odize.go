@@ -2,6 +2,7 @@
 package odize
 
 import (
+	"errors"
 	"fmt"
 	"slices"
 	"testing"
@@ -12,12 +13,12 @@ import (
 const (
 	// ODIZE_TAGS is the environment variable that is used to filter tests
 	ODIZE_TAGS = "ODIZE_TAGS"
-	// ENV variable declared in pipelines such as Github Actions
+	// ENV_CI ENV variable declared in pipelines such as Github Actions
 	ENV_CI = "CI"
 )
 
 var (
-	ErrTestOptionNotAllowedInCI = fmt.Errorf("test option 'Only' not allowed in CI environment")
+	ErrTestOptionNotAllowedInCI = errors.New("test option 'Only' not allowed in CI environment")
 )
 
 // NewGroup -  Create a new test group.
@@ -98,11 +99,11 @@ func (tg *TestGroup) Run() error {
 
 	tg.beforeAll()
 
-	entries, err := filterExecutableTests(tg.t, tg.isCIEnv, tg.registry)
+	entries, err := filterExecutableTests(tg.isCIEnv, tg.registry)
 	if err != nil {
 		// Stop Run, suite is in an invalid state
 		tg.complete = true
-		return fmt.Errorf("Test group \"%s\" error: %w", tg.t.Name(), err)
+		return fmt.Errorf("test group \"%s\" error: %w", tg.t.Name(), err)
 	}
 
 	for _, entry := range entries {
@@ -121,7 +122,7 @@ func (tg *TestGroup) Run() error {
 // registerTest registers a test to the group. Do not overwrite existing tests.
 func (tg *TestGroup) registerTest(name string, testFn TestFn, options TestOpts) error {
 	if _, ok := tg.cache[name]; ok {
-		return fmt.Errorf("test already exists: %s", name)
+		return fmt.Errorf("%w: %s", ErrTestAlreadyExists, name)
 	}
 
 	tg.cache[name] = struct{}{}
@@ -174,7 +175,6 @@ func shouldSkipTests(groupTags []string, envTags []string) bool {
 
 	if len(groupTags) == 0 && len(envTags) == 0 {
 		// run all tests
-		fmt.Println("running test")
 		return false
 	}
 
@@ -189,8 +189,8 @@ func shouldSkipTests(groupTags []string, envTags []string) bool {
 
 // filterExecutableTests filters tests that are executable within the test group
 // Note that test option 'Only' is only used for debugging tests, and should not be used in a CI env.
-func filterExecutableTests(t *testing.T, isCIEnv bool, tests []TestRegistryEntry) ([]TestRegistryEntry, error) {
-	filtered, err := filterOnlyAllowedTests(t, isCIEnv, tests)
+func filterExecutableTests(isCIEnv bool, tests []TestRegistryEntry) ([]TestRegistryEntry, error) {
+	filtered, err := filterOnlyAllowedTests(isCIEnv, tests)
 	if err != nil {
 		return filtered, err
 	}
@@ -220,8 +220,8 @@ func filterExecutableTests(t *testing.T, isCIEnv bool, tests []TestRegistryEntry
 
 // filterOnlyAllowedTests filters tests that are marked as only within a test group
 // If the framework detects that the test is running under a CI environment and the group has tests with 'Only', then it will return an error
-func filterOnlyAllowedTests(t *testing.T, isCIEnv bool, tests []TestRegistryEntry) ([]TestRegistryEntry, error) {
-	filtered := []TestRegistryEntry{}
+func filterOnlyAllowedTests(isCIEnv bool, tests []TestRegistryEntry) ([]TestRegistryEntry, error) {
+	var filtered []TestRegistryEntry
 
 	for _, test := range tests {
 		if test.options.Only && isCIEnv {

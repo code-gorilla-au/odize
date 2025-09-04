@@ -1,5 +1,50 @@
+version: "2"
 
-linters-settings:
-  govet:
-    disable:
-      - printf
+linters:
+  enable:
+    - cyclop
+    - nestif
+    - bodyclose
+    - iface
+    - gosec
+    - errcheck
+    - err113
+    - errchkjson
+    - errname
+    - errorlint
+    - exptostd
+    - fatcontext
+    - forbidigo
+    - forcetypeassert
+    - govet
+    - importas
+    - ireturn
+    - recvcheck
+    - sloglint
+    - staticcheck
+    - unparam
+    - unused
+    - wastedassign
+
+  settings:
+    staticcheck:
+      checks:
+        - "-QF1012"
+  exclusions:
+    govet:
+      disable:
+        - printf
+
+    generated: lax
+
+    rules:
+      # Exclude some linters from running on tests files.
+      - path: _test\.go
+        linters:
+          - gocyclo
+          - cyclop
+          - dupl
+          - err113
+          - gosec
+          - forbidigo
+          - exhaustruct
