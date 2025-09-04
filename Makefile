@@ -24,7 +24,7 @@ BINARY_PATH ?= "dist"
 ci: log scan test ## Run CI checks
 
 test: ## Run unit tests
-	go test -v --short -cover -failfast ./...
+	go test --short -cover -failfast ./...
 
 test-watch: ## Run unit tests in watch mode
 	gow test -v --short -cover -failfast ./...
@@ -35,8 +35,7 @@ scan: ## run security scan
 
 tools-get: ## Get project tools required
 	go install golang.org/x/vuln/cmd/govulncheck@latest
-	go install github.com/securego/gosec/v2/cmd/gosec@latest
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.2.2
 
 # HELP
 # This will output the help for each task
