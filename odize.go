@@ -21,9 +21,9 @@ var (
 	ErrTestOptionNotAllowedInCI = errors.New("test option 'Only' not allowed in CI environment")
 )
 
-// NewGroup -  Create a new test group.
+// NewGroup - Create a new test group.
 //
-// If t he ODIZE_TAGS environment variable is set, then only tests with matching tags will be run.
+// If the ODIZE_TAGS environment variable is set, then only tests with matching tags will be run.
 func NewGroup(t *testing.T, tags *[]string) *TestGroup {
 	groupTags := tags
 	if groupTags == nil {
