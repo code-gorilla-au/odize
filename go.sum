@@ -1,4 +1,4 @@
-github.com/code-gorilla-au/env v1.1.1 h1:4rkSwCnyymKh+KGAOPx3fEg9v2ZV5i9r92bSf7xvnCE=
-github.com/code-gorilla-au/env v1.1.1/go.mod h1:KE4Ymfz5MhMi7SX3ZKH4iMFAHsDCvwOV8WTzgpwzzE4=
+github.com/code-gorilla-au/env v1.1.2 h1:G+aq1FHJiiGDZoUMlDIOWcC/B+ndF1myu1Sw1/jqCjs=
+github.com/code-gorilla-au/env v1.1.2/go.mod h1:oN0D7NMmiPju+qgg2ghZ8L9c7xod6ObVDCjIy65oCuI=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
